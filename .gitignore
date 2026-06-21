@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-.env
-venv/
-.venv/
-.env.local
-*.pkl
-*.h5
-*.pt
