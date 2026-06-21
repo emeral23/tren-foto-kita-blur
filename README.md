@@ -1,7 +1,10 @@
-"# tren-foto-kita-blur" 
 ## mengambil refrensi dari kak clara
 
 https://github.com/claramiadevira/foto-kita-blur.git
+
+## atau tiktoknya
+
+https://vt.tiktok.com/ZSQE5GTwv/
 
 ## Installation
 
