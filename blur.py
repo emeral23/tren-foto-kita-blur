@@ -5,7 +5,6 @@ import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-# 1. Download model otomatis kalau belum ada di folder
 MODEL_PATH = "hand_landmarker.task"
 if not os.path.exists(MODEL_PATH):
     print("Memperbarui model deteksi tangan, tunggu bentar...")
@@ -13,7 +12,7 @@ if not os.path.exists(MODEL_PATH):
     urllib.request.urlretrieve(url, MODEL_PATH)
     print("Model berhasil diunduh!")
 
-# 2. Inisialisasi MediaPipe Tasks (Kompetibel Python 3.13)
+
 base_options = python.BaseOptions(model_asset_path=MODEL_PATH)
 options = vision.HandLandmarkerOptions(
     base_options=base_options,
@@ -25,23 +24,19 @@ detector = vision.HandLandmarker.create_from_options(options)
 
 
 def finger_up(tip, pip, landmarks):
-    # Logika koordinat y: semakin ke atas nilai y semakin kecil
     return landmarks[tip].y < landmarks[pip].y
 
 
 def is_peace(landmarks):
-    # Deteksi jari telunjuk (8, 6) dan tengah (12, 10) ke atas
     index_up = finger_up(8, 6, landmarks)
     middle_up = finger_up(12, 10, landmarks)
 
-    # Deteksi jari manis (16, 14) dan kelingking (20, 18) ditekuk
     ring_up = finger_up(16, 14, landmarks)
     pinky_up = finger_up(20, 18, landmarks)
 
     return index_up and middle_up and not ring_up and not pinky_up
 
 
-# 3. Mulai Kamera
 cap = cv2.VideoCapture(0)
 
 while True:
@@ -49,35 +44,27 @@ while True:
     if not success:
         break
 
-    # Efek Cermin
     frame = cv2.flip(frame, 1)
 
-    # Konversi format warna ke RGB
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    # Ubah format image agar sesuai dengan MediaPipe Tasks
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
 
-    # Proses deteksi
     detection_result = detector.detect(mp_image)
 
     peace_detected = False
 
-    # Jika tangan terdeteksi
     if detection_result.hand_landmarks:
         for hand_landmarks in detection_result.hand_landmarks:
             if is_peace(hand_landmarks):
                 peace_detected = True
                 break
 
-    # Efek blur jika pose peace terdeteksi
     if peace_detected:
         frame = cv2.GaussianBlur(frame, (61, 61), 0)
 
-    # Tampilkan ke layar
     cv2.imshow("Peace Blur Python 3.13", frame)
 
-    # Tekan 'ESC' untuk keluar
     if cv2.waitKey(1) & 0xFF == 27:
         break
 

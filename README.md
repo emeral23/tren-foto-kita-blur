@@ -8,7 +8,7 @@ https://github.com/claramiadevira/foto-kita-blur.git
 Clone this repository:
 
 ```bash
-git clone 
+git clone https://github.com/emeral23/tren-foto-kita-blur.git
 ```
 
 Install dependencies:
